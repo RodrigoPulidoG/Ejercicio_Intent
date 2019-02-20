@@ -50,9 +50,10 @@ public class ThirdActivity extends AppCompatActivity {
             }
 
 
+
             @SuppressLint("MissingPermission")
             private void OlderVersions(String phone) {
-                Intent intentCall = new Intent(Intent.ACTION_CALL, Uri.parse("tel: " + etp));
+                Intent intentCall = new Intent(Intent.ACTION_CALL, Uri.parse("tel: " + phone));
                 if (CheckPermission(Manifest.permission.CALL_PHONE)) {
                     startActivity(intentCall);
                 } else {
