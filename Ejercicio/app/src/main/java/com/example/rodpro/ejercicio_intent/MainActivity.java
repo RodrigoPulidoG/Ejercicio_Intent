@@ -8,7 +8,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    private View btn;
+    private Button btn;
     private final String GREETER = "Hello from the oder side!";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +26,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, SecondActivity.class);
                 intent.putExtra("gretter",GREETER);
                 startActivity(intent);
-
-
-
 
             }
         });
