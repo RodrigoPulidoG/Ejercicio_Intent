@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context="com.example.rodpro.ejercicio_intent.MainActivity">
 
-    
+    <Button
+        android:id="@+id/buttonMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#cab852"
+        android:text="Go Next"
+        android:textColor="#3e341c"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
