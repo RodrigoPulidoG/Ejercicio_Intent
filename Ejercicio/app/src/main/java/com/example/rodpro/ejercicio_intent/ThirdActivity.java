@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
@@ -39,24 +40,51 @@ public class ThirdActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String phone = etp.getText().toString();
-                if (phone != null) {
+                if (phone != null && !phone.isEmpty() ) {
                     // COMPROBAR VERSION ACTUAL DE ANDROID QUE ESTAMOS CORRIENDO
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-                        requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PHONE_CALL_CODE);
+
+                        // COMPROBAR SI HA ACEPTADO, NO HA ACEPTADO O NUNCA LE HAN PREGUNTADO
+                        if (CheckPermission(Manifest.permission.CALL_PHONE)){
+                            // acepta
+                            Intent i = new Intent(Intent.ACTION_CALL, Uri.parse("Tel: "+phone));
+                            if (ActivityCompat.checkSelfPermission(ThirdActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) return;
+                            startActivity(i);
+                        }else {
+                            // no acepta o no le han preguntado
+                            if (!shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE)){
+                                // no le han preguntado
+                                requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PHONE_CALL_CODE);
+                            }else {
+                                // no acepta
+                                Toast.makeText(ThirdActivity.this, "Please, enable the request permission!", Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                                i.addCategory(Intent.CATEGORY_DEFAULT);
+                                i.setData(Uri.parse("package: "+getPackageName()));
+                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                                startActivity(i);
+                            }
+
+                        }
                     } else {
                         OlderVersions(phone);
                     }
+                }else {
+                    Toast.makeText(ThirdActivity.this, "Please insert a number!", Toast.LENGTH_SHORT).show();
+
                 }
             }
-
 
 
             @SuppressLint("MissingPermission")
             private void OlderVersions(String phone) {
                 Intent intentCall = new Intent(Intent.ACTION_CALL, Uri.parse("tel: " + phone));
                 if (CheckPermission(Manifest.permission.CALL_PHONE)) {
-                    startActivity(intentCall);
-                } else {
+                   startActivity(intentCall);
+                }
+                else {
                     Toast.makeText(ThirdActivity.this, "You declined the access", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -102,11 +130,7 @@ public class ThirdActivity extends AppCompatActivity {
     private boolean CheckPermission(String permission){
         int result = this.checkCallingOrSelfPermission(permission);
         return result == PackageManager.PERMISSION_GRANTED;
-
-
     }
 
-    private  void VersioneAntiguas(){
 
-    }
 }
