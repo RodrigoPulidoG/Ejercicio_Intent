@@ -20,7 +20,7 @@ import android.widget.Toast;
 public class ThirdActivity extends AppCompatActivity {
 
     private EditText etp, etw;
-    private ImageButton ibp, ibw, ibc;
+    private ImageButton ibp, ibw, ibc, ibcontacts, emailSend;
     private final int PHONE_CALL_CODE = 100;
 
     @Override
@@ -28,14 +28,24 @@ public class ThirdActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_third);
 
-        etp = (EditText) findViewById(R.id.editTextPhone);
-        etw = (EditText) findViewById(R.id.editTextWeb);
-        ibp = (ImageButton) findViewById(R.id.imageButtonPhone);
-        ibw = (ImageButton) findViewById(R.id.imageButtonWeb);
-        ibc = (ImageButton) findViewById(R.id.imageButtonCamera);
+        etp = findViewById(R.id.editTextPhone);
+        etw = findViewById(R.id.editTextWeb);
+        ibp = findViewById(R.id.imageButtonPhone);
+        ibw = findViewById(R.id.imageButtonWeb);
+        ibc = findViewById(R.id.imageButtonCamera);
+        ibcontacts = findViewById(R.id.imageButtonContacts);
+        emailSend = findViewById(R.id.imageButtonEmail);
 
-
+        //Boton telefono
         ibp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentPhone = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+etp.getText().toString()));
+                startActivity(intentPhone);
+            }
+        });
+
+        /*ibp.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
@@ -87,6 +97,42 @@ public class ThirdActivity extends AppCompatActivity {
                 else {
                     Toast.makeText(ThirdActivity.this, "You declined the access", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });*/
+
+        //Boton ir a la web
+        ibw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = etw.getText().toString();
+                if (url != null && !url.isEmpty()){
+                    Intent intentWeb = new Intent(Intent.ACTION_VIEW, Uri.parse("http://"+url));
+                    startActivity(intentWeb);
+                }else {
+                    Toast.makeText(getApplicationContext(),"Inserte una direccion!!",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        //Boton contactos
+        ibcontacts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    Intent intentContacts = new Intent(Intent.ACTION_VIEW,Uri.parse("content://contacts/people"));
+                    startActivity(intentContacts);
+                }
+        });
+
+        //Boton enviar email
+        emailSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String correo = "Rodcovenan";
+                Intent email = new Intent(Intent.ACTION_VIEW, Uri.parse(correo));
+                email.putExtra(Intent.EXTRA_SUBJECT,"Mail's tittle");
+                email.putExtra(Intent.EXTRA_TEXT, "pruebas pruebas");
+                email.putExtra(Intent.EXTRA_EMAIL, new String[]{"rodpulido@hotmail.com","rodrigo.pulido@cosmicgo.co"});
+                startActivity(email);
             }
         });
     }
