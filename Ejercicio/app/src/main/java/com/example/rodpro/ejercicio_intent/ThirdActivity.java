@@ -20,7 +20,7 @@ import android.widget.Toast;
 public class ThirdActivity extends AppCompatActivity {
 
     private EditText etp, etw;
-    private ImageButton ibp, ibw, ibc, ibcontacts, emailSend;
+    private ImageButton ibp, ibw, ibc, ibcontacts, emailSend, mapa;
     private final int PHONE_CALL_CODE = 100;
 
     @Override
@@ -32,9 +32,18 @@ public class ThirdActivity extends AppCompatActivity {
         etw = findViewById(R.id.editTextWeb);
         ibp = findViewById(R.id.imageButtonPhone);
         ibw = findViewById(R.id.imageButtonWeb);
-        ibc = findViewById(R.id.imageButtonCamera);
+        mapa = findViewById(R.id.imageButtonMapa);
         ibcontacts = findViewById(R.id.imageButtonContacts);
         emailSend = findViewById(R.id.imageButtonEmail);
+
+        //Boton Mapa
+        mapa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentMap = new Intent(getApplicationContext(), MapsActivity.class);
+                startActivity(intentMap);
+            }
+        });
 
         //Boton telefono
         ibp.setOnClickListener(new View.OnClickListener() {

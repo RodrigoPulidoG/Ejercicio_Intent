@@ -109,11 +109,11 @@
 
 
     <ImageButton
-        android:id="@+id/imageButtonCamera"
+        android:id="@+id/imageButtonMapa"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginBottom="0dp"
         android:background="#0c5b0a"
-        android:src="@android:drawable/ic_menu_camera"
+        android:src="@android:drawable/ic_menu_mapmode"
         app:layout_constraintBottom_toBottomOf="parent"/>
 </android.support.constraint.ConstraintLayout>
