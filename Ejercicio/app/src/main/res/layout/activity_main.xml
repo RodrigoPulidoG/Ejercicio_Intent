@@ -6,6 +6,67 @@
     android:layout_height="match_parent"
     tools:context="com.example.rodpro.ejercicio_intent.MainActivity">
 
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/login_spin_kiA"
+        style="@style/SpinKitView.WanderingCubes"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="100dp"
+        app:SpinKit_Color="@color/colorPrimaryDark"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/login_spin_kitB"
+        style="@style/SpinKitView.Pulse"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="30dp"
+        app:SpinKit_Color="@color/colorPrimaryDark"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_spin_kiA" />
+
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawerL"
+        android:layout_width="220dp"
+        android:layout_height="300dp"
+        android:fitsSystemWindows="true"
+        tools:Context="com.splash.ws.drawerlayout.MainActivity">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="#cac3c3">
+
+            <CheckBox
+                android:id="@+id/cBoxA"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="80dp"
+                android:text="Progres Bar A"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <CheckBox
+                android:id="@+id/cBoxB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="30dp"
+                android:text="Progres Bar B"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cBoxA" />
+
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v4.widget.DrawerLayout>
+
     <Button
         android:id="@+id/buttonMain"
         android:layout_width="match_parent"
@@ -16,5 +77,21 @@
         android:textSize="18dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent" />
+
+    <ToggleButton
+        android:id="@+id/toggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ToggleButton"
+        tools:layout_editor_absoluteX="49dp"
+        tools:layout_editor_absoluteY="330dp" />
+
+    <Switch
+        android:id="@+id/switch1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Switch"
+        tools:layout_editor_absoluteX="49dp"
+        tools:layout_editor_absoluteY="411dp" />
 
 </android.support.constraint.ConstraintLayout>

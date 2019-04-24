@@ -62,8 +62,8 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
         button.setOnClickListener(this);
 
         // (MOSTRAR / OCULTAR) LOS PROGRES BAR CON LOS CHECK BOX
-        //checkStatusBox();
-        //showProgresBar();
+        checkStatusBox();
+        showProgresBar();
 
     }
 
@@ -98,13 +98,6 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
                 }
             }
         });
-
-
-        /*
-        }if (cb2.isChecked()){
-            pbB.setVisibility(View.VISIBLE);
-        }
-        */
     }
 
     private void hideProgressDialog() {
