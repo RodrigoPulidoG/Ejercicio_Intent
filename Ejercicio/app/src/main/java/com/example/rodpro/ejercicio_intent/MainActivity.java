@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -37,6 +36,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn.setOnClickListener(this);
     }
 
+    private void goToTimedTasks() {
+        Intent intent = new Intent(MainActivity.this, TimedTasksActivity.class);
+        intent.putExtra("gretter",GREETER);
+        startActivity(intent);
+    }
+
+    private void rotateView(View view) {
+        animation.setDuration(2000);
+        animation.setRepeatCount(Animation.ABSOLUTE);
+        animation.setRepeatMode(Animation.ZORDER_NORMAL);
+        view.startAnimation(animation);
+    }
 
     @Override
     public void onClick(View v) {
@@ -51,16 +62,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 rotateView(imageView);
                 break;
             case R.id.buttonTasks:
-                Toast.makeText(this, "Go to Timed Tasks", Toast.LENGTH_SHORT).show();
+                goToTimedTasks();
                 break;
         }
-
     }
 
-    private void rotateView(View view) {
-        animation.setDuration(2000);
-        animation.setRepeatCount(Animation.ABSOLUTE);
-        animation.setRepeatMode(Animation.ZORDER_NORMAL);
-        view.startAnimation(animation);
-    }
 }
