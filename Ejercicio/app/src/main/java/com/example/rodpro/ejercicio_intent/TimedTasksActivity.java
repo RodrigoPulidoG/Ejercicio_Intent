@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -35,13 +36,14 @@ public class TimedTasksActivity extends AppCompatActivity implements View.OnClic
     private TextView newDateParce;
     private Date parseDate;
     private EditText hoursSub;
+    private ArrayList<String> tasks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timed_tasks);
         setUpViews();
-        takeCurrentData();
+        takeCurrentDate();
     }
 
     private void setUpViews() {
@@ -62,23 +64,23 @@ public class TimedTasksActivity extends AppCompatActivity implements View.OnClic
         timerTask = new TimerTask() {
             @Override
             public void run() {
-                Log.d(TAG,"TimerTask, account: " + ++counter);
+                Log.d(TAG,"TimerTask, account: " + (++counter));
                 rotateLaunchImage(image);
             }
         };
     }
 
-    private void takeCurrentData() {
+    private void takeCurrentDate() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault());
         Date date = new Date();
         String time = dateFormat.format(date);
         try {
             parseDate = dateFormat.parse(time);
-            Log.d(TAG,"takeCurrentData, Current Date: " + parseDate);
+            Log.d(TAG,"takeCurrentDate, Current Date: " + parseDate);
             currentDate.setText(changeDateFormat(parseDate));
         } catch (ParseException e) {
             e.printStackTrace();
-            Log.e(TAG,"takeCurrentData, ParseException: " + e);
+            Log.e(TAG,"takeCurrentDate, ParseException: " + e);
         }
 
 
@@ -111,7 +113,8 @@ public class TimedTasksActivity extends AppCompatActivity implements View.OnClic
         switch (v.getId()){
             case R.id.rotate_button:
                 try {
-                    timer.scheduleAtFixedRate(timerTask,0, UPDATE_INTERVAL);
+                    //createDelayTask();
+                    implementAutoCancelTask();
                 }catch (Exception e){
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -121,14 +124,53 @@ public class TimedTasksActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    private void implementAutoCancelTask() {
+        final int numberTimes = 5;
+        final int[] count = {0};
+        final Timer t = new Timer();
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Log.d(TAG,"createDelayTask, Count = " + count[0]);
+                if (count[0] <numberTimes){
+                    rotateLaunchImage(image);
+                }else {
+                    t.cancel();
+                }
+                count[0] = count[0] +1;
+            }
+        }, 0, 3000);
+
+    }
+
+    private void createDelayTask() {
+        Log.d(TAG,"createDelayTask");
+        Date date = new Date();
+        Date dateDelay = addSecondsDelay(date, 10);
+        timer.scheduleAtFixedRate(timerTask,dateDelay, UPDATE_INTERVAL);
+    }
+
+    private Date addSecondsDelay(Date date, int seconds) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.SECOND,seconds);
+        Date newDate = calendar.getTime();
+        Log.d(TAG,"addSecondsDelay, New Date: " + newDate);
+        return newDate;
+
+    }
+
     private void rotateLaunchImage(final View view) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                animation.setDuration(1000);
+                Log.d(TAG,"rotateLaunchImage");
+                animation.setDuration(1500);
                 animation.setRepeatCount(Animation.ABSOLUTE);
                 animation.setRepeatMode(Animation.ZORDER_NORMAL);
                 view.startAnimation(animation);
+                //sentNotificationTimed(count);
+
             }
         });
     }
