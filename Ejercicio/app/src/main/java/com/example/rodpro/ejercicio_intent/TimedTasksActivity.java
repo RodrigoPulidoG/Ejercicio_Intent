@@ -1,5 +1,13 @@
 package com.example.rodpro.ejercicio_intent;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +28,8 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static android.graphics.Color.rgb;
+
 public class TimedTasksActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "TIMED_TASKS";
     private static final long UPDATE_INTERVAL = 3000;
@@ -36,7 +46,7 @@ public class TimedTasksActivity extends AppCompatActivity implements View.OnClic
     private TextView newDateParce;
     private Date parseDate;
     private EditText hoursSub;
-    private ArrayList<String> tasks;
+    private ArrayList<String> tasksNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +54,14 @@ public class TimedTasksActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_timed_tasks);
         setUpViews();
         takeCurrentDate();
+        setTasksNames();
+    }
+
+    private void setTasksNames() {
+        tasksNames = new ArrayList<>();
+        tasksNames.add("Task1");
+        tasksNames.add("Task2");
+        tasksNames.add("Task3");
     }
 
     private void setUpViews() {
@@ -114,7 +132,7 @@ public class TimedTasksActivity extends AppCompatActivity implements View.OnClic
             case R.id.rotate_button:
                 try {
                     //createDelayTask();
-                    implementAutoCancelTask();
+                    generateTasks();
                 }catch (Exception e){
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -124,30 +142,29 @@ public class TimedTasksActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void implementAutoCancelTask() {
-        final int numberTimes = 5;
-        final int[] count = {0};
-        final Timer t = new Timer();
-        t.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                Log.d(TAG,"createDelayTask, Count = " + count[0]);
-                if (count[0] <numberTimes){
-                    rotateLaunchImage(image);
-                }else {
-                    t.cancel();
+    private void generateTasks() {
+        final int numberTimes = 2;
+        int delay = 0;
+        for (int i=0; i<=tasksNames.size()-1;i++){
+            final int[] count = {0};
+            final Timer tim = new Timer();
+            final int pos = i;
+            tim.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if (count[0] < numberTimes){
+                        Log.d(TAG,"generateTasks, Task = " + tasksNames.get(pos));
+                        rotateLaunchImage(image);
+                        sendNotification(tasksNames.get(pos));
+                    }else {
+                        tim.cancel();
+                        tim.purge();
+                    }
+                    count[0] = count[0] +1;
                 }
-                count[0] = count[0] +1;
-            }
-        }, 0, 3000);
-
-    }
-
-    private void createDelayTask() {
-        Log.d(TAG,"createDelayTask");
-        Date date = new Date();
-        Date dateDelay = addSecondsDelay(date, 10);
-        timer.scheduleAtFixedRate(timerTask,dateDelay, UPDATE_INTERVAL);
+            },delay, 15000);
+            delay = delay + 5000;
+        }
     }
 
     private Date addSecondsDelay(Date date, int seconds) {
@@ -181,4 +198,52 @@ public class TimedTasksActivity extends AppCompatActivity implements View.OnClic
         timer.cancel();
         timer.purge();
     }
+
+    private void sendNotification(String nameTask) {
+        Log.d(TAG, "sendNotification");
+        //Intent intent = new Intent(this, activity .class);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        //PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+
+        Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        String NOTIFICATION_CHANNEL_ID = getString(android.R.string.defaultMsisdnAlphaTag);
+        String title =  getString(R.string.app_name);
+        String body = nameTask;
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+        notificationBuilder
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setColor(rgb(255 ,160, 0))
+                .setContentTitle(title)
+                .setContentText(body)
+                .setAutoCancel(true)
+                .setVibrate(new long[]{0, 200, 200, 200})
+                .setSound(soundUri)
+                //.setContentIntent(pendingIntent)
+                .setContentInfo("TimerTaskNotify");
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID,
+                    "Notification",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            notificationChannel.setDescription("TimerTaskNotify");
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.BLUE);
+            notificationChannel.setVibrationPattern(new long[]{0, 200, 200, 200});
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+
+        notificationManager.notify(0, notificationBuilder.build());
+    }
+
+    private void createDelayDateTask() {
+        Log.d(TAG,"createDelayDateTask");
+        Date date = new Date();
+        Date dateDelay = addSecondsDelay(date, 10);
+        timer.scheduleAtFixedRate(timerTask,dateDelay, UPDATE_INTERVAL);
+    }
+
 }
