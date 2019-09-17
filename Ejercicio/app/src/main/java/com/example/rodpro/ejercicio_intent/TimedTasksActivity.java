@@ -212,7 +212,7 @@ public class TimedTasksActivity extends AppCompatActivity implements View.OnClic
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
         notificationBuilder
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_action_name)
                 .setColor(rgb(255 ,160, 0))
                 .setContentTitle(title)
                 .setContentText(body)
@@ -231,7 +231,7 @@ public class TimedTasksActivity extends AppCompatActivity implements View.OnClic
                     NotificationManager.IMPORTANCE_DEFAULT);
             notificationChannel.setDescription("TimerTaskNotify");
             notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.BLUE);
+            notificationChannel.setLightColor(Color.MAGENTA);
             notificationChannel.setVibrationPattern(new long[]{0, 200, 200, 200});
             notificationManager.createNotificationChannel(notificationChannel);
         }
